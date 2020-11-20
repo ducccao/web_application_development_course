@@ -13,6 +13,8 @@ app.engine(
   })
 );
 
+app.use("/admin/categories", require("./routes/category.route"));
+
 app.set("view engine", "hbs");
 
 app.get("/", (req, res) => {
