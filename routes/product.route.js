@@ -1,33 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const mysql = require("mysql");
+const db = require("./../utils/db");
 
 router.get("/", (req, res) => {
-  const connection = mysql.createConnection({
-    host: "localhost",
-    port: "3306",
-    user: "duccao",
-    password: "duc123",
-    database: "qlbh",
-  });
-
-  connection.connect();
-
-  connection.query("select * from products", (er, result, fields) => {
-    if (er) throw er;
-    console.log(result);
-
-    console.log("The solution is: ", result[0]);
-
-    const products = result;
-
+  const sql = "select * from products";
+  const render_func = (rows) => {
     res.render("vwProducts/index", {
-      products,
-      isEmpty: products.length === 0,
+      products: rows,
+      isEmpty: rows.length === 0,
     });
-  });
+  };
 
-  connection.end();
+  db.load(sql, render_func);
 });
 
 module.exports = router;
