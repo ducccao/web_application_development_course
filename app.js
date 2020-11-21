@@ -14,7 +14,7 @@ app.engine(
 );
 
 app.use("/admin/categories", require("./routes/category.route"));
-
+app.use("/admin/products", require("./routes/product.route"));
 app.set("view engine", "hbs");
 
 app.get("/", (req, res) => {
