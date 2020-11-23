@@ -1,5 +1,7 @@
 const express = require("express");
 const exhbs = require("express-handlebars");
+// thằng cha này cân hếch try catch
+require("express-async-errors");
 
 const app = express();
 
@@ -32,6 +34,22 @@ app.get("/bs4", (req, res) => {
   res.render("bs4", {
     layout: false,
     data: { visible },
+  });
+});
+
+//
+app.use(function (req, res) {
+  res.render("404", {
+    layout: false,
+  });
+});
+
+// default handle error
+// the last  barricade
+app.use(function (err, req, res, next) {
+  console.log(err.stack);
+  res.render("500", {
+    layout: false,
   });
 });
 

@@ -2,6 +2,7 @@ const express = require("express");
 var mysql = require("mysql");
 const router = express.Router();
 const db = require("./../utils/db");
+const categoryModel = require("../models/category.model");
 
 // const list = [
 //   { cateID: 1, cateName: "Laptop" },
@@ -12,16 +13,58 @@ const db = require("./../utils/db");
 //   { cateID: 6, cateName: "Jewelry" },
 // ];
 
-router.get("/", (req, res) => {
-  const render_function = function (rows) {
-    res.render("vwCategories/index", {
-      categories: rows,
-      isEmpty: rows.length === 0,
-    });
-  };
+router.get("/", async (req, res) => {
+  const all_categories = await categoryModel.all();
+  res.render("vwCategories", {
+    categories: all_categories,
+    isEmpty: all_categories.length === 0,
+  });
+  // try {
 
-  var sql = "select * from categories";
-  db.load(sql, render_function);
+  //   const all_categories = await categoryModel.all();
+  //   res.render("vwCategories", {
+  //     categories: all_categories,
+  //     isEmpty: all_categories.length === 0,
+  //   });
+  // } catch (er) {
+  //   console.log(er);
+  //   res.send("View error at server console");
+  // }
+
+  // try {
+  //   var sql = "select * from categories";
+
+  //   const rows = await db.load(sql);
+  //   console.log(rows);
+  //   res.render("vwCategories/index", {
+  //     categories: rows,
+  //     isEmpty: rows.length === 0,
+  //   });
+  // } catch (er) {
+  //   console.log(er);
+  //   res.send("View error log at server console");
+  // }
+
+  // var sql = "select * from categories1";
+  // const p = db.load(sql);
+  // p.then((rows) => {
+  //   res.render("vwCategories/index", {
+  //     categories: rows,
+  //     isEmpty: rows.length === 0,
+  //   });
+  // }).catch((er) => {
+  //   console.log(er);
+  //   res.send("View error log at server console");
+  // });
+
+  // const render_function = function (rows) {
+  //   res.render("vwCategories/index", {
+  //     categories: rows,
+  //     isEmpty: rows.length === 0,
+  //   });
+  // };
+
+  // db.load(sql, render_function);
 
   // var connection = mysql.createConnection({
   //   host: "localhost",
