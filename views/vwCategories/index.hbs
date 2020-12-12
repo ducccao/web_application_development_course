@@ -1,6 +1,12 @@
 <div class="card">
-    <h5 class="card-header">
+    <h5 class="card-header d-flex justify-content-between ">
         Categories
+
+        <a href="/admin/categories/add" role="button" class="btn btn-outline-success">
+            <i class="fa fa-plus">
+                Add category
+            </i>
+        </a>
     </h5>
 
     {{!-- if
@@ -47,7 +53,7 @@
                         {{cateName}}
                     </td>
                     <td class="text-right">
-                        <a href="javascript:;" title="Edit category" class="btn btn-sm btn-primary">
+                        <a href="/admin/categories/{{cateID}}" title="Edit category" class="btn btn-sm btn-primary">
                             <i class="fa fa-pencil" aria-hidden="true"></i>
                         </a>
                     </td>

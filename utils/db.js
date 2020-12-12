@@ -1,15 +1,7 @@
-var mysql = require("mysql");
+const { table } = require("console");
+const mysql = require("mysql");
 const util = require("util");
-// connection bug
-// var connection = mysql.createConnection({
-//   host: "localhost",
-//   port: "3306",
-//   user: "duccao",
-//   password: "duc123",
-//   database: "qlbh",
-// });
 
-// then use create pool
 var pool = mysql.createPool({
   host: "localhost",
   port: "3306",
@@ -23,28 +15,19 @@ var pool = mysql.createPool({
 const pool_query = util.promisify(pool.query).bind(pool);
 
 module.exports = {
-  load(sql) {
+  load: (sql) => {
     return pool_query(sql);
   },
 
-  // load(sql) {
-  //   return new Promise((done, fail) => {
-  //     pool.query(sql, (er, result, fields) => {
-  //       if (er) {
-  //         fail(er);
-  //       } else {
-  //         done(result);
-  //       }
-  //     });
-  //   });
-  // },
-  // load(sql, fn) {
-  //   connection.connect();
-  //   connection.query(sql, (er, result, fields) => {
-  //     if (er) throw er;
-  //     console.log(result);
-  //     fn(result);
-  //     connection.end();
-  //   });
-  // },
+  add: (entity, tableName) => {
+    return pool_query(`insert into ${tableName} set ? `, entity);
+  },
+
+  del: (condition, tableName) => {
+    return pool_query(`delete from ${tableName} where ?`, condition);
+  },
+
+  patch: (entity, condition, tableName) => {
+    return pool_query(`update ${tableName} set ? where ?`, [entity, condition]);
+  },
 };

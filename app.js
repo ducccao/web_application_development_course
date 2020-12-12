@@ -1,59 +1,65 @@
 const express = require("express");
-const exhbs = require("express-handlebars");
+const expressHandleBars = require("express-handlebars");
+const categoryModel = require("./models/category.model");
+const numeral = require("numeral");
+
 // thằng cha này cân hếch try catch
 require("express-async-errors");
 
 const app = express();
 
-app.engine(
-  "hbs",
-  exhbs({
-    defaultLayout: "main.hbs",
-    extname: ".hbs",
-    layoutsDir: "views/_layouts",
-    partialsDir: "views/_partials",
-  })
+// middle ware
+app.use(
+    express.urlencoded({
+        extended: true,
+    })
 );
 
-app.use("/admin/categories", require("./routes/category.route"));
-app.use("/admin/products", require("./routes/product.route"));
+// engine
+
+app.use("/udemy", express.static("udemy"));
+
+app.engine(
+    "hbs",
+    expressHandleBars({
+        defaultLayout: "main.hbs",
+        extname: ".hbs",
+        layoutsDir: "views/_layouts",
+        partialsDir: "views/_partials",
+        helpers: {
+            // try to using numeral.js right there
+            format(val) {
+                //   console.log(val);
+                return numeral(val).format("0,0");
+            },
+        },
+    })
+);
 app.set("view engine", "hbs");
 
+app.use("/public", express.static("public"));
+
+// load category before do something else
+// tai sao main.hbs nhan duoc lcCategories
+app.use(require("./middlewares/locals.mdw"));
+
+// routers
+app.use("/admin/categories", require("./routers/category.router"));
+app.use("/admin/products", require("./routers/product.router"));
+app.use("/products", require("./routers/front/product.route.js"));
+
+//app.use(express.static("client"));
+
 app.get("/", (req, res) => {
-  res.render("home");
+    // console.log(res.locals.lcCategories);
+    res.render("home");
 });
 
 app.get("/about", (req, res) => {
-  res.render("about");
+    res.render("about");
 });
 
-app.get("/bs4", (req, res) => {
-  console.log(req.query.show);
-  const show = +req.query.show || 0;
-  const visible = show !== 0;
-  res.render("bs4", {
-    layout: false,
-    data: { visible },
-  });
-});
-
-//
-app.use(function (req, res) {
-  res.render("404", {
-    layout: false,
-  });
-});
-
-// default handle error
-// the last  barricade
-app.use(function (err, req, res, next) {
-  console.log(err.stack);
-  res.render("500", {
-    layout: false,
-  });
-});
-
-const PORT = 1212;
-app.listen(PORT, (_) => {
-  console.log("App os listening at ", PORT);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log("Server is start at ", PORT);
 });
