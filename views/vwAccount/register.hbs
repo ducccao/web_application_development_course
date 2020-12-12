@@ -1,0 +1,112 @@
+{{#section 'css'}}
+
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css"
+    integrity="sha512-f0tzWhCwVFS3WeYaofoLWkTP62ObhewQ1EZn65oSYDZUg1+CyywGKkWzm8BxaJj5HGKI72PnMH9jYyIFz+GH7g=="
+    crossorigin="anonymous" />
+{{/section}}
+
+
+{{#section 'js'}}
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"
+    integrity="sha512-AIOTidJAcHBH2G/oZv9viEGXRqDNmfdPVPYOYKGy3fti0xIplnlgMHUGfuNRzC6FkzIo0iIxgFnr9RikFxK+sw=="
+    crossorigin="anonymous"></script>
+
+<script>
+
+    // form on submit
+    $("#fmRegister").on("submit", function (e) {
+        e.preventDefault();
+        const username = $("#txtUsername").val();
+        console.log("sm")
+        if (username.length === 0) {
+            alert("Invalid data.");
+            return;
+        }
+
+        const url = `/account/is-available?user=${username}`
+        console.log(url)
+
+
+        $.getJSON(url, function (data) {
+            if (data === true) {
+                // infinitive loop
+                $("#fmRegister").off("submit").submit();
+            }
+            else {
+                alert("Invalid data.");
+
+            }
+            console.log(data)
+        })
+    })
+
+
+    function validate() {
+
+    }
+    validate();
+
+    // datetimepicker
+    jQuery('#txtDOB').datetimepicker({
+        timepicker: false,
+        mask: true,
+        format: 'd/m/Y',
+    });
+</script>
+
+{{/section}}
+
+
+<form action="" method="POST" id="fmRegister">
+    <div class="card">
+        <h5 class="card-header">Home</h5>
+        <div class="card-body">
+
+
+            <div class="form-group">
+                <label for="txtUsername">Username</label>
+                <input type="text" name="username" id="txtUsername" autofocus class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="txtPassword">Password</label>
+                <input type="password" name="password" id="txtPassword" autofocus class="form-control">
+            </div>
+
+
+            <div class="form-group">
+                <label for="txtPassword">Confirm</label>
+                <input type="password" name="confirm" id="txtPassword" autofocus class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="txtName">Name</label>
+                <input type="text" name="name" id="txtName" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="txtEmail">Email</label>
+                <input type="text" name="email" id="txtEmail" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="txtDOB">Date of birth</label>
+                <input type="text" name="dob" id="txtDOB" class="form-control">
+            </div>
+
+
+
+
+
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-outline-success" type="submit">
+                <i class="fa fa-check"></i>
+                Register
+            </button>
+        </div>
+    </div>
+</form>
